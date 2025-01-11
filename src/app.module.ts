@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigurationModule } from './config/config.module';
 import { UsersModule } from './users/users.module';
+import { ProductModule } from './products/product.module';
 
 @Module({
   imports: [
@@ -16,10 +17,10 @@ import { UsersModule } from './users/users.module';
       database: process.env.DATABASE_NAME,
       entities: ['dist/**/*.entity.{ts,js}'],
       synchronize: true,
-      logging: true,
     }),
     UsersModule,
     AuthModule,
+    ProductModule,
   ],
 })
 export class AppModule {}

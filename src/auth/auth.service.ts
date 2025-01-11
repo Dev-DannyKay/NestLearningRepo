@@ -12,11 +12,18 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
+    const user = await this.usersService.findByEmail(registerDto.email);
+    if (user) {
+      return { meassage: 'Invalid password or email' };
+    }
     return this.usersService.createUser(registerDto);
   }
 
   async login(loginDto: LoginDto): Promise<{ accessToken: string }> {
     const user = await this.usersService.findByEmail(loginDto.email);
+    if (!user) {
+      throw new UnauthorizedException({ message: 'Invalid email or password' });
+    }
     if (
       user &&
       (await this.usersService.validatePassword(
@@ -24,7 +31,7 @@ export class AuthService {
         user.password,
       ))
     ) {
-      const payload = { email: user.email, sub: user.id };
+      const payload = { email: user.email };
       return { accessToken: this.jwtService.sign(payload) };
     }
     throw new UnauthorizedException();
