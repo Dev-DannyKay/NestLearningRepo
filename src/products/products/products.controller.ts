@@ -38,6 +38,12 @@ export class ProductsController {
     return await this.productsService.findAllProducts();
   }
 
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  public async getProductyByCategory(@Param('category') category: string) {
+    return await this.productsService.getProductyByCategory(category);
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   public async findProductById(@Param('id') id: string): Promise<Products> {

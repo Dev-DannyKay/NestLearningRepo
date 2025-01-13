@@ -35,6 +35,14 @@ export class ProdutsService {
     }
   }
 
+  async getProductyByCategory(category: string): Promise<Products[]> {
+    try {
+      return this.productsRepository.find({ where: { categories: category } });
+    } catch (error) {
+      throw new BadRequestException({ message: error.message });
+    }
+  }
+
   public async findProductById(id: string): Promise<Products> {
     const product = await this.productsRepository.findOne({ where: { id } });
     if (!product) {
