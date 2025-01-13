@@ -1,18 +1,21 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
   Post,
+  Put,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { ProdutsService } from '../produts/produts.service';
+import { Response } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { Products } from '../entities/product.entity';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ProdutsService } from '../produts/produts.service';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
@@ -22,9 +25,11 @@ export class ProductsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   public async createProduct(
-    createProductDto: CreateProductDto,
-  ): Promise<Products> {
-    return await this.productsService.createProduct(createProductDto);
+    @Body() createProductDto: CreateProductDto,
+    @Res() res: Response,
+  ): Promise<void> {
+    await this.productsService.createProduct(createProductDto);
+    res.send({ message: 'Product created successfully' }); // Send the message using res
   }
 
   @Get()
@@ -35,22 +40,26 @@ export class ProductsController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  public async findProductById(@Param('id') id: number): Promise<Products> {
+  public async findProductById(@Param('id') id: string): Promise<Products> {
     return await this.productsService.findProductById(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @HttpCode(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
   public async updateProduct(
-    @Param('id') id: number,
-    updateProductDto: CreateProductDto,
+    @Param('id') id: string,
+    @Body() updateProductDto: Partial<CreateProductDto>,
   ): Promise<Products> {
     return await this.productsService.updateProduct(id, updateProductDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deletProduct(@Param('id') id: number): Promise<void> {
+  public async deletProduct(
+    @Param('id') id: string,
+    @Res() res: Response,
+  ): Promise<void> {
     await this.productsService.deleteProduct(id);
+    res.send({ message: 'Product deleted succesfully' });
   }
 }

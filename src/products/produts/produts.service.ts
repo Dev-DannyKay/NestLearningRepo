@@ -20,7 +20,8 @@ export class ProdutsService {
   ): Promise<Products> {
     try {
       const product = this.productsRepository.create(createProductDto);
-      return this.productsRepository.save(product);
+      this.productsRepository.save(product);
+      return product;
     } catch (error) {
       throw new BadRequestException({ message: error.message });
     }
@@ -34,7 +35,7 @@ export class ProdutsService {
     }
   }
 
-  public async findProductById(id: number): Promise<Products> {
+  public async findProductById(id: string): Promise<Products> {
     const product = await this.productsRepository.findOne({ where: { id } });
     if (!product) {
       throw new NotFoundException({ message: 'Product not found' });
@@ -43,10 +44,13 @@ export class ProdutsService {
   }
 
   public async updateProduct(
-    id: number,
-    updateProductDto: CreateProductDto,
+    id: string,
+    updateProductDto: Partial<CreateProductDto>,
   ): Promise<Products> {
     const product = await this.findProductById(id);
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
     try {
       await this.productsRepository.update(id, updateProductDto);
       return product;
@@ -55,7 +59,7 @@ export class ProdutsService {
     }
   }
 
-  public async deleteProduct(id: number): Promise<void> {
+  public async deleteProduct(id: string): Promise<void> {
     const product = await this.findProductById(id);
     try {
       await this.productsRepository.delete(id);

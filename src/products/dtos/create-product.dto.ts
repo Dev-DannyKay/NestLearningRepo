@@ -9,11 +9,13 @@ export class CreateProductDto {
   description: string;
 
   @IsNumber()
+  @IsNotEmpty()
   price: number;
 
   @IsNumber()
   stock: number;
 
   @IsString()
+  @IsNotEmpty()
   imageUrl: string;
 }
