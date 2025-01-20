@@ -25,6 +25,10 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { email } });
   }
 
+  async findAllUsers():Promise<User[]>{
+    return this.usersRepository.find();
+  }
+
   async validatePassword(
     password: string,
     hashedPassword: string,

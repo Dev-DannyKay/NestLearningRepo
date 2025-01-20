@@ -3,14 +3,13 @@ import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  productName: string;
 
   @IsString()
   description: string;
 
-  @IsArray() 
-  @IsString({ each: true }) 
-  categories: string[];
+  @IsString({ each: true })
+  categories: string;
 
   @IsNumber()
   @IsNotEmpty()

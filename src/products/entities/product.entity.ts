@@ -1,11 +1,11 @@
+import { OrderItem } from 'src/orders/entities/order-item.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
-import {  Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('products')
-export class Products extends BaseEntity{
-
+export class Products extends BaseEntity {
   @Column()
-  name: string;
+  productName: string;
 
   @Column()
   description: string;
@@ -16,9 +16,14 @@ export class Products extends BaseEntity{
   @Column()
   stock: number;
 
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+    cascade: true,
+  })
+  orderItems: OrderItem[];
+
   @Column()
   imageUrl: string;
 
-  @Column('simple-array', { nullable: true }) 
-  categories: string[];
+  @Column({ nullable: true })
+  categorie: string;
 }

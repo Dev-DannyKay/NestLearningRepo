@@ -37,16 +37,16 @@ export class ProdutsService {
 
   async getProductyByCategory(category: string): Promise<Products[]> {
     try {
-      return this.productsRepository.find({ where: { categories: category } });
+      return this.productsRepository.find({ where: { categorie: category } });
     } catch (error) {
-      throw new BadRequestException({ message: error.message });
+      throw new BadRequestException(error.message);
     }
   }
 
   public async findProductById(id: string): Promise<Products> {
     const product = await this.productsRepository.findOne({ where: { id } });
     if (!product) {
-      throw new NotFoundException({ message: 'Product not found' });
+      throw new NotFoundException('Product not found');
     }
     return product;
   }

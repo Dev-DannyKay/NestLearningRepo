@@ -1,8 +1,15 @@
-import { Order } from 'src/orders/entities/orders.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Orders } from 'src/orders/entities/orders.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  BaseEntity,
+} from 'typeorm';
 
 @Entity()
-export class User extends BaseEntity{
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -18,6 +25,7 @@ export class User extends BaseEntity{
   @Column()
   password: string;
 
-  @OneToMany(() => Order, (order) => order.user)
-  orders: Order[];
+  @OneToMany(() => Orders, (order) => order.user)
+  orders: Orders[];
+
 }

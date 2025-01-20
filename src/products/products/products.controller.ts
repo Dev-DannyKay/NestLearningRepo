@@ -20,6 +20,7 @@ import { ProdutsService } from '../produts/produts.service';
 @Controller('products')
 @UseGuards(JwtAuthGuard)
 export class ProductsController {
+
   constructor(private readonly productsService: ProdutsService) {}
 
   @Post()
@@ -29,7 +30,7 @@ export class ProductsController {
     @Res() res: Response,
   ): Promise<void> {
     await this.productsService.createProduct(createProductDto);
-    res.send({ message: 'Product created successfully' }); // Send the message using res
+    res.send({ message: 'Product created successfully' }); 
   }
 
   @Get()

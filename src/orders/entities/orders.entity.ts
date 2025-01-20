@@ -1,20 +1,22 @@
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany
+} from 'typeorm';
+import { OrderItem } from './order-item.entity';
 
 @Entity()
-export class Order extends BaseEntity{
- 
+export class Orders extends BaseEntity {
   @ManyToOne(() => User, (user) => user.orders, { eager: true })
   user: User;
 
-  @Column('jsonb') // Store order items as a JSONB array
-  items: Array<{
-    productId: number;
-    productName: string;
-    quantity: number;
-    price: number;
-  }>;
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+    cascade: true,
+  })
+  orderItems: OrderItem[];
 
   @Column('decimal')
   totalAmount: number;
