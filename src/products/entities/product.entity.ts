@@ -1,6 +1,6 @@
 import { OrderItem } from 'src/orders/entities/order-item.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('products')
 export class Products extends BaseEntity {
@@ -25,5 +25,5 @@ export class Products extends BaseEntity {
   imageUrl: string;
 
   @Column({ nullable: true })
-  categorie: string;
+  category: string;
 }

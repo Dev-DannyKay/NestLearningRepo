@@ -1,33 +1,43 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterDto } from '../dtos/register.dto';
 import { Response } from 'express';
+import { GoogleAuthGuard } from '../guards/google-auth.guard';
+import { AuthenticatedRequest } from 'src/shared/types';
+
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(
+  public async register(
     @Body() registerDto: RegisterDto,
     @Res() res: Response,
   ): Promise<void> {
-    try {
       await this.authService.register(registerDto);
-      res.status(201).send({ message: 'User created successfully' });
-    } catch (e) {
-      res.status(400).send({ message: 'Failed to create user' });
-    }
+      res.status(201).send({ message: 'User created successfully' })
   }
 
+
   @Post('login')
-  async login(@Body() loginDto: LoginDto, @Res() res: Response) {
-    try {
-      const accessToken = await this.authService.login(loginDto);
-      return res.status(200).json(accessToken);
-    } catch (error) {
-      return res.status(400).json({ message: error.message });
-    }
+  @HttpCode(HttpStatus.CREATED)
+  async login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
+    return this.authService.login(loginDto);
   }
+
+  @Get('google/login')
+  @UseGuards(GoogleAuthGuard)
+  handleGoogleLogin(){
+  return {msg:'Google Login'}
+  }
+
+  @Get('google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  handleGoogleRedirect(@Req() req: AuthenticatedRequest, @Res() res: Response){
+    const user = req.user;
+    res.json(user);
+  }
+
 }
